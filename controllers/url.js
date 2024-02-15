@@ -47,7 +47,7 @@ const create = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "url created",
-      id: id,
+      url: newUrl,
     });
   } catch (err) {
     console.log("Error", err.message);
@@ -76,7 +76,7 @@ const getAllUrls = async (req, res) => {
 
 const _delete = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const { email } = req.user;
     const user = await userModel.findOne({ email: email });
     const url = await urlModel.findOne({ shortId: id });
@@ -92,7 +92,8 @@ const _delete = async (req, res) => {
     await url.deleteOne();
     return res.status(200).json({
       success: true,
-      message: "Url deleted successfully",
+      message: "deleted",
+      url,
     });
   } catch (err) {
     console.log("Error in _delete", err.message);

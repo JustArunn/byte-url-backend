@@ -1,12 +1,12 @@
 import { auth } from "../middleware/auth.js";
-import { redirect, create, _delete, getAllUrls } from "../controllers/url.js";
+import { create, _delete, getAllUrls } from "../controllers/url.js";
 import express from "express";
 const router = new express.Router();
 
 // router.get("/r/:id", redirect);
 router.get("/urls", auth, getAllUrls);
 router.post("/create", auth, create);
-router.delete("/delete/:id", auth, _delete);
+router.delete("/delete", auth, _delete);
 
 export default router;
 

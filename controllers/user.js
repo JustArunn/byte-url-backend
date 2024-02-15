@@ -25,9 +25,10 @@ const signup = async (req, res) => {
 
     const token = newUser.generateAuthToken();
 
-    return res.status(200).cookie("token", token).json({
+    return res.status(200).json({
       success: true,
-      message: "User created successfully.",
+      message: "User created",
+      token: token,
     });
   } catch (err) {
     console.log("Error in signup", err.message);
@@ -64,10 +65,11 @@ const login = async (req, res) => {
     const token = user.generateAuthToken();
     user.password = undefined;
     user.__v = undefined;
-    return res.status(200).cookie("token", token).json({
+    return res.status(200).json({
       success: true,
-      message: "user loggedIn",
+      message: "LoggedIn",
       user: user,
+      token: token,
     });
   } catch (err) {
     console.log("Error in login", err.message);
@@ -110,7 +112,7 @@ const logout = async (req, res) => {
         message: "Please login",
       });
     }
-    return res.status(200).cookie("token", "").json({
+    return res.status(200).json({
       success: true,
       message: "Logged out",
     });
@@ -131,7 +133,7 @@ const _delete = async (req, res) => {
     }
     await urlModel.deleteMany({ _id: user.urls });
     await user.deleteOne();
-    return res.status(200).cookie("token", "").json({
+    return res.status(200).json({
       success: true,
       message: "User deleted successfully",
     });

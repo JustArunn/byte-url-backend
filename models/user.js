@@ -32,7 +32,9 @@ userSchema.methods.generateAuthToken = function () {
       _id: this._id,
       email: this.email,
     };
-    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "2h",
+    });
     return token;
   } catch (err) {
     console.log("Error in token generation", err);
