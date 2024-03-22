@@ -39,8 +39,8 @@ const create = async (req, res) => {
       });
     }
     const id = shortId.generate();
-    const newUrl = urlModel({ shortId: id, originUrl: url });
-    await newUrl.save();
+    const newUrl = await urlModel({ shortId: id, originUrl: url }).save();
+    // await newUrl.save();
     user.urls.push(newUrl._id);
     await user.save();
 
@@ -61,6 +61,7 @@ const getAllUrls = async (req, res) => {
       .findOne({ email: email })
       .select("urls -_id")
       .populate("urls");
+
     return res.status(200).json({
       success: true,
       urls,
@@ -76,24 +77,27 @@ const getAllUrls = async (req, res) => {
 
 const _delete = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { _id } = req.body;
     const { email } = req.user;
-    const user = await userModel.findOne({ email: email });
-    const url = await urlModel.findOne({ shortId: id });
-    if (!url) {
+
+    await userModel.findOneAndUpdate(
+      { email: email },
+      { $pull: { urls: _id } },
+      { new: true }
+    );
+    const deletedUrl = await urlModel.findOneAndDelete(
+      { _id: _id },
+      { new: true }
+    );
+    if (!deletedUrl) {
       return res.status(404).json({
         success: false,
         message: "url not found",
       });
     }
-    const index = user.urls.indexOf(id);
-    user.urls.splice(index, 1);
-    await user.save();
-    await url.deleteOne();
     return res.status(200).json({
       success: true,
       message: "deleted",
-      url,
     });
   } catch (err) {
     console.log("Error in _delete", err.message);
