@@ -18,7 +18,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1",
-    "shortid": "^2.2.16"
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
